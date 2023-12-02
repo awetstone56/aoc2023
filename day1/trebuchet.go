@@ -27,7 +27,7 @@ func main() {
 	var calSum int
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Print(line)
+		// fmt.Print(line)
 		firstNum := ""
 		lastNum := ""
 		firstNumFound := false
@@ -40,16 +40,13 @@ func main() {
 				if !firstNumFound {
 					firstNumFound = true
 					firstNum = char
-					lastNum = char
-				} else {
-					lastNum = char
 				}
+				lastNum = char
 			}
 
 			if index == (len(line) - 1) {
-				// fmt.Printf(" = %s and %s", firstNum, lastNum)
 				combinedNum := fmt.Sprintf("%s%s", firstNum, lastNum)
-				fmt.Println(combinedNum)
+				// fmt.Println(combinedNum)
 				num, err := strconv.Atoi(combinedNum)
 				if err != nil {
 					log.Fatal(err)
