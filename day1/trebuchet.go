@@ -27,39 +27,39 @@ func main() {
 	var calSum int
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
-		var firstNum string
-		var lastNum string
-		var firstNumFound bool
-
+		fmt.Print(line)
+		firstNum := ""
+		lastNum := ""
+		firstNumFound := false
 		for index, x := range line {
 			// fmt.Println(index, string(x))
 			char := string(x)
 			_, err := strconv.Atoi(char)
-			if err != nil {
-				// not an int; skip
-				continue
-			}
-
-			if !firstNumFound {
-				firstNumFound = true
-				firstNum = char
-				lastNum = char
-			} else {
-				lastNum = char
+			if err == nil {
+				// is an int
+				if !firstNumFound {
+					firstNumFound = true
+					firstNum = char
+					lastNum = char
+				} else {
+					lastNum = char
+				}
 			}
 
 			if index == (len(line) - 1) {
-				combinedNum := firstNum + lastNum
+				// fmt.Printf(" = %s and %s", firstNum, lastNum)
+				combinedNum := fmt.Sprintf("%s%s", firstNum, lastNum)
 				fmt.Println(combinedNum)
 				num, err := strconv.Atoi(combinedNum)
 				if err != nil {
 					log.Fatal(err)
 				}
-				calSum = calSum + num
+				fmt.Printf("Adding %d to %d", num, calSum)
+				calSum += num
+				firstNumFound = false
 			}
 		}
+		fmt.Printf(" = %d", calSum)
+		fmt.Println()
 	}
-
-	fmt.Printf("The summation of all calibration values is %x", calSum)
 }
