@@ -11,14 +11,14 @@ import (
 )
 
 var numMap = map[string]string{
-	"zero":  "0o",
+	"zero":  "z0o",
 	"one":   "o1e",
 	"two":   "t2e",
 	"three": "t3e",
-	"four":  "4",
+	"four":  "f4r",
 	"five":  "5e",
-	"six":   "6",
-	"seven": "7n",
+	"six":   "s6x",
+	"seven": "s7n",
 	"eight": "e8t",
 	"nine":  "n9e",
 }
