@@ -15,6 +15,12 @@ var colorMap = map[string]int{
 	"blue":  14,
 }
 
+var colorMapTwo = map[string]int{
+	"red":   0,
+	"green": 0,
+	"blue":  0,
+}
+
 func main() {
 	// open input file
 	file, err := os.Open("puzzleInput.txt")
@@ -31,6 +37,7 @@ func main() {
 
 	scanner := bufio.NewScanner(file)
 	possibleGameIdSum := 0
+	gamePowerSum := 0
 	for scanner.Scan() {
 		// each line is one game with multiple attempts with each attempt being separated
 		// by a ; and the game starts after :
@@ -59,12 +66,30 @@ func main() {
 				if colorCount > colorMap[colorName] {
 					isPossible = false
 				}
+
+				if colorCount > colorMapTwo[colorName] {
+					colorMapTwo[colorName] = colorCount
+				}
 			}
+		}
+
+		gamePower := 1
+		// Multiply all values in the map
+		for _, value := range colorMapTwo {
+			gamePower *= value
+		}
+		fmt.Println(gamePower)
+		gamePowerSum += gamePower
+
+		// reset the map for next game
+		for key := range colorMapTwo {
+			colorMapTwo[key] = 0
 		}
 
 		if isPossible {
 			possibleGameIdSum += gameId
 		}
 	}
-	fmt.Println(possibleGameIdSum)
+	fmt.Println("The sum for part 1 is:", possibleGameIdSum)
+	fmt.Println("The sum for part 2 is:", gamePowerSum)
 }

@@ -26,7 +26,7 @@ var numMap = map[string]string{
 func main() {
 	// open input file
 	file, err := os.Open("puzzleInput.txt")
-	// file, err := os.Open("smallPuzzleInput.txt") // this answer should be 585
+	// file, err := os.Open("simpleInput.txt") // this answer should be 585
 	if err != nil {
 		log.Fatal(err)
 	}
