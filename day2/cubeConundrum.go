@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
+	"strings"
 )
 
-type Game struct {
-	Id             int
-	NumOfReds      int
-	NumOfGreens    int
-	NumOfBlues     int
-	IsPossibleGame bool
+var colorMap = map[string]int{
+	"red":   12,
+	"green": 13,
+	"blue":  14,
 }
 
 func main() {
@@ -30,33 +30,41 @@ func main() {
 	}()
 
 	scanner := bufio.NewScanner(file)
-
-	// Begin Problem Logic Here
-	compNumOfRed := 12
-	compNumOfGreen := 13
-	compNumOfBlue := 14
-
+	possibleGameIdSum := 0
 	for scanner.Scan() {
 		// each line is one game with multiple attempts with each attempt being separated
 		// by a ; and the game starts after :
 		line := scanner.Text()
-		fmt.Print(line)
 
-		// grab the id integer for the game
+		isPossible := true
+		gameIdStr := strings.Split(strings.Split(line, " ")[1], ":")[0]
+		gameId, err := strconv.Atoi(gameIdStr) // grab the attempt tokens
+		if err != nil {
+			log.Fatal("Error parsing gameId:", err)
+			return
+		}
+		attemptList := strings.Split(strings.Split(line, ":")[1], ";")
 
-		// grab the attempt tokens
+		for _, attempt := range attemptList {
+			colorList := strings.Split(attempt, ",")
+			for _, color := range colorList {
+				colorAryStr := strings.Split(color, " ")
+				colorCount, err := strconv.Atoi(strings.TrimSpace(colorAryStr[1]))
+				if err != nil {
+					log.Fatal("Error parsing color count:", err)
+					return
+				}
+				colorName := colorAryStr[2]
 
-		// parse the attempts record the highest of each color
+				if colorCount > colorMap[colorName] {
+					isPossible = false
+				}
+			}
+		}
 
-		// create a struct with the highest of each color and the respective id
-		// and isPossible to true on the struct for initial value
-
-		// append to the struct list with append
+		if isPossible {
+			possibleGameIdSum += gameId
+		}
 	}
-
-	// loop through the struct list
-	// 		compare num of reds to comp value; if > than comp value set possible to false and exit
-	//		if gets to end of loop, then add the id int value to the sum
-	// print the sum for the answer
-
+	fmt.Println(possibleGameIdSum)
 }
