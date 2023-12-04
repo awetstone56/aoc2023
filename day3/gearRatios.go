@@ -31,7 +31,7 @@ func main() {
 	// AND subsequently identify the points that border around the number strings
 	// THEN we should have all the info we need to identify the actual parts and then sum them together
 	enginePartsSum := 0
-	// parts := map[image.Point][]int{}
+	parts := map[image.Point][]int{}
 	for y, line := range strings.Fields(string(fileContent)) {
 		// match on strings of numbers, then grab their start/end indices to check around each point
 		// we won't care about looking at anything inbetween and it doesn't appear that inputs have more/less than 2-3 digits
@@ -53,10 +53,22 @@ func main() {
 			for borderPoint := range numberBorder {
 				if _, existsInMap := symbolGrid[borderPoint]; existsInMap {
 					enginePartsSum += num
+					// add the part number to the part map,
+					// this is so we can track how many part numbers are associated with a given part
+					// if it is associated with 2 numbers, its actually a gear, we need that for the ratio
+					parts[borderPoint] = append(parts[borderPoint], num)
 				}
 			}
 		}
 	}
 
-	fmt.Println(enginePartsSum)
+	gearRatioSum := 0
+	for point, part := range parts {
+		if symbolGrid[point] == '*' && len(part) == 2 {
+			gearRatioSum += part[0] * part[1] // grab the numbers associated with the "part"/gear
+		}
+	}
+
+	fmt.Println("The sum of all engine parts is:", enginePartsSum)
+	fmt.Println("The sum of all gear ratios is:", gearRatioSum)
 }
