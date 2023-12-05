@@ -1,0 +1,11 @@
+go 1.21.4
+
+use (
+	./day1
+	./day2
+	./day3
+	./day4
+	./greetings
+	./hello
+	./helloworld
+)
