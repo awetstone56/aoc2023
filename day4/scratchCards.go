@@ -3,42 +3,30 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"math"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	// open input file
-	// file, err := os.Open("puzzleInput.txt")
-	file, err := os.Open("sampleInput.txt") // this answer should be 13
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// attempt to close file and log if errors
-	defer func() {
-		if err = file.Close(); err != nil {
-			log.Fatal(err)
-		}
-	}()
-
+	file, _ := os.Open("puzzleInput.txt")
+	// file, _ := os.Open("sampleInput.txt") // this answer should be 13
 	scanner := bufio.NewScanner(file)
 
 	totalPoints := 0
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		fmt.Println(line)
-
-		var matchingNumsMap = map[int]int{}
+		var matchingNumsMap = map[int]int{} // might want this for part 2 even though idk what it is
+		numOfMatches := 0
 
 		gameNums := strings.Split(line, ":")[1]
 		gameNumsTokens := strings.Split(gameNums, "|")
-		winningNums := strings.Split(strings.TrimSpace(gameNumsTokens[0]), " ")
-		myNums := strings.Split(strings.TrimSpace(gameNumsTokens[1]), " ")
+		re := regexp.MustCompile(`\d+`)
+		winningNums := re.FindAllString(gameNumsTokens[0], -1)
+		myNums := re.FindAllString(gameNumsTokens[1], -1)
 
 		for _, numStr := range winningNums {
 			num, _ := strconv.Atoi(numStr)
@@ -48,31 +36,17 @@ func main() {
 		for _, numStr := range myNums {
 			num, _ := strconv.Atoi(numStr)
 			if _, exists := matchingNumsMap[num]; exists {
-				matchingNumsMap[num] = 1
-				fmt.Printf("num: %d, matchingNumsMap[num]: %d, ", num, matchingNumsMap[num])
-			}
-		}
-		fmt.Println()
-
-		numOfMatches := 0
-		for key, value := range matchingNumsMap {
-			fmt.Print(key)
-			fmt.Printf(": %d, ", value)
-			if value > 0 {
+				matchingNumsMap[num] += 1
 				numOfMatches++
 			}
 		}
 
-		fmt.Println()
-		fmt.Printf("numOfMatches: %d", numOfMatches)
-		fmt.Println()
 		if numOfMatches != 0 {
 			cardPoints := int(math.Pow(2, float64(numOfMatches-1)))
 			totalPoints += cardPoints
-			fmt.Printf("Card Points: %d, New Total Points: %d", cardPoints, totalPoints)
-			fmt.Println()
 		}
 	}
 
-	fmt.Println("The cards you have are worth:", totalPoints)
+	fmt.Printf("The cards you have are worth %d points.", totalPoints)
+	fmt.Println()
 }
